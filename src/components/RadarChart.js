@@ -2,95 +2,49 @@ import React, {useState,useEffect} from 'react';
 import {Radar} from 'react-chartjs-2';
 
 
-const RadarChart = () =>{
+const RadarChart = (props) =>{
 
     const [apiValue, setApiValue] = useState([]);
     const [apiValue2, setApiValue2] = useState([]);
+
     useEffect(() =>{
+      
         async function loadData(){
-            const response = await fetch("https://api.pokemontcg.io/v2/cards?q=name:ditto");
+            const response = await fetch("https://pokeapi.co/api/v2/pokemon/" +props.search1);
             const data = await response.json();
-            const item = data.data;
-           setApiValue(item);  
+          //  const item = data;
+           setApiValue([data.stats[3].base_stat,data.stats[4].base_stat,data.id,data.order,data.weight]);
+           console.log(data);
+    
         }
     
         loadData();
     
         async function loadData2(){
-            const response = await fetch("https://api.pokemontcg.io/v2/cards?q=name:pikachu");
-            const data = await response.json();
-            const item = data.data;
-           setApiValue2(item);  
+            const response = await fetch("https://pokeapi.co/api/v2/pokemon/" + props.search2);
+            const data2 = await response.json();
+      //      const item2 = data;
+           setApiValue2([data2.stats[3].base_stat,data2.stats[4].base_stat,data2.id,data2.order,data2.weight]); 
+    
         }
     
         loadData2();
-        }, []);
+        }, [props]);
 
-        console.log(apiValue);
-        console.log(apiValue2);
-        var HPpoke1 = [];
-        var HPpoke2 = [];
-        var lvlpoke1 = [];
-        var lvlpoke2 = [];
-        var pokedexPoke1 = [];
-        var pokedexPoke2 = [];
-        var weaknessespoke1 = [];
-        var weaknessespoke2 = [];
-        var printedpoke1 = [];
-        var printedpoke2 = [];
-
-        for(var i = 0; i < apiValue.length; i++){
-            HPpoke1.push(apiValue[i].hp);
-    
-        };
-    
-        for(var i = 0; i < apiValue2.length; i++){
-            HPpoke2.push(apiValue2[i].hp);
-        
-        };
-                for(var i = 0; i < apiValue.length; i++){
-            lvlpoke1.push(apiValue[i].level);
-    
-        };
-    
-        for(var i = 0; i < apiValue2.length; i++){
-            lvlpoke2.push(apiValue2[i].level);
-        
-        };
-
-        for(var i = 0; i < apiValue.length; i++){
-            pokedexPoke1.push(apiValue[i].nationalPokedexNumbers[0]);
-    
-        };
-    
-        for(var i = 0; i < apiValue2.length; i++){
-            pokedexPoke2.push(apiValue2[i].nationalPokedexNumbers[0]);
-        
-        };
-
-        for(var i = 0; i < apiValue.length; i++){
-            printedpoke1.push(apiValue[i].set.printedTotal);
-    
-        };
-    
-        for(var i = 0; i < apiValue2.length; i++){
-            printedpoke2.push(apiValue2[i].set.printedTotal);
-        
-        };
-
+ 
 
     const chartData = {
-            labels:['HP', 'Level', 'national Pokedex Numbers', 'Weaknesses','Printed'],
+            labels:['Special Attack', 'Special Defence', 'ID', 'Order','Weight'],
             datasets: [{
-                label: 'Pokemon 1',
-                data: [HPpoke1[0], lvlpoke1[0], pokedexPoke1[0], 15, printedpoke1[0]],
+                label: ""+props.search1 +"",
+                 data: apiValue,
                 fill: true,
                 backgroundColor: 'rgba(179, 0, 0,0.6)',
                 borderColor:'rgba(179, 0, 0,0.6)',
                 pointBackgroundColor: 'rgba(179, 0, 0)',
               }, {
-                label: 'Pokemon 2',
-                data: [HPpoke2[0], lvlpoke2[0], pokedexPoke2[0], 15, printedpoke2[0]],
+                label: ""+props.search2 +"",
+                data: apiValue2,
                 fill: true,
                 backgroundColor: 'rgba(150, 100, 235, 0.6)',
                 borderColor: 'rgb(150, 100, 235)',
@@ -102,7 +56,7 @@ const RadarChart = () =>{
 
         return(
             <div className='containerChart'><h1 style={{textAlign:'center', marginTop:'-15px'}}>ALL Stats</h1><br></br>
-            <h1 style={{textAlign:'center', marginTop:'-35px',fontSize:'16px', fontWeight:'200'}}>-Compare Pokemon Level-</h1>
+            <h1 style={{textAlign:'center', marginTop:'-35px',fontSize:'16px', fontWeight:'200'}}>-Compare Pokemon stats-</h1>
         <div style={{height:'250px', width:'250px', float:'left', marginLeft:'125px'}}  className='Prices'>
            <Radar data={chartData}  options={{
                responsive:true,

@@ -2,51 +2,55 @@ import React, {useState,useEffect} from 'react';
 import {Bar} from 'react-chartjs-2';
 
 
-const BarChart = () =>{
+
+
+
+const BarChart = (props) =>{
 
     const [apiValue, setApiValue] = useState([]);
     const [apiValue2, setApiValue2] = useState([]);
 
+
     useEffect(() =>{
+ 
+
     async function loadData(){
-        const response = await fetch("https://api.pokemontcg.io/v2/cards?q=name:ditto");
+        const response = await fetch("https://pokeapi.co/api/v2/pokemon/"  +props.search1);
         const data = await response.json();
-        const item = data.data;
-       setApiValue(item);  
+        const item = data;
+       setApiValue(item);
+       console.log(item);
+
     }
 
     loadData();
 
     async function loadData2(){
-        const response = await fetch("https://api.pokemontcg.io/v2/cards?q=name:pikachu");
+        const response = await fetch("https://pokeapi.co/api/v2/pokemon/"  +props.search2);
         const data = await response.json();
-        const item = data.data;
-       setApiValue2(item);  
+        const item2 = data;
+       setApiValue2(item2); 
+
     }
 
     loadData2();
-    }, []);
+    }, [props]);
 
-    var lvlpoke1 = [];
-    var lvlpoke2 = [];
+    var experiencepoke1 = [];
+    var experiencepoke2 = [];
+    experiencepoke1.push(apiValue.base_experience);
+    experiencepoke2.push(apiValue2.base_experience);
+    console.log(experiencepoke1);
+    console.log(experiencepoke2);
 
-    for(var i = 0; i < apiValue.length; i++){
-        lvlpoke1.push(apiValue[i].level);
-
-    };
-
-    for(var i = 0; i < apiValue2.length; i++){
-        lvlpoke2.push(apiValue2[i].level);
-    
-        };
     
 
     const chartData = {
-        labels: ["lvl Pokemon 1","lvl Pokemon 2"],
+        labels: [""+props.search1 +"",""+props.search2 +""],
         datasets:[{
             axis: 'y',
-            label:'Level',
-            data:[lvlpoke1[0],lvlpoke2[0]],
+            label:'Experience',
+            data:[experiencepoke1,experiencepoke2],
            
             backgroundColor:[
                 'rgba(179, 0, 0,0.6)',
@@ -67,8 +71,8 @@ const BarChart = () =>{
     };
 
         return(
-            <div className='containerChart'><h1 style={{textAlign:'center', marginTop:'-15px'}}>Levels Comparison</h1><br></br>
-            <h1 style={{textAlign:'center', marginTop:'-35px',fontSize:'16px', fontWeight:'200'}}>-Compare Pokemon Level-</h1>
+            <div className='containerChart'><h1 style={{textAlign:'center', marginTop:'-15px'}}>Experience Comparison</h1><br></br>
+            <h1 style={{textAlign:'center', marginTop:'-35px',fontSize:'16px', fontWeight:'200'}}>-Compare Pokemon experience-</h1>
         <div style={{height:'500px', width:'500px', float:'left'}}  className='Prices'>
            <Bar data={chartData}  options={{
                responsive:true,

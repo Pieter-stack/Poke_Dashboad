@@ -1,26 +1,22 @@
-import BarChart from './components/BarChart';
-import CustomChart from './components/CustomChart';
-import LineChart from './components/LineChart';
+import Compare from './components/Compare';
+import HomePage from './components/HomePage';
 import Navbar from './components/Navbar';
-import PieChart from './components/PieChart';
-import PokeCon from './components/PokeCon';
-import RadarChart from './components/RadarChart';
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 function App() {
   return (
+    <Router>
     <div className="primarycon">
       <Navbar/>
       <div className='bodycontainer'>
-      <PokeCon/>
-      <PokeCon/>
-      <LineChart/>
-      <BarChart/>
-      <PieChart/>
-      <RadarChart/>
-      <CustomChart/>
+      <Switch>
+      <Route path="/" exact component={HomePage} />
+      <Route path="/compare" component={Compare} />
+      </Switch>
       </div>
 
     </div>
+    </Router>
   );
 }
 

@@ -1,61 +1,59 @@
 import React, {useState, useEffect } from "react";
 import { Pie } from "react-chartjs-2";
 
-const PieChart = () => {
+const PieChart = (props) => {
+
 
     const [apiValue, setApiValue] = useState([]);
     const [apiValue2, setApiValue2] = useState([]);
 
+
     useEffect(() =>{
+ 
+
     async function loadData(){
-        const response = await fetch("https://api.pokemontcg.io/v2/cards?q=name:ditto");
+        const response = await fetch("https://pokeapi.co/api/v2/pokemon/"+props.search1);
         const data = await response.json();
-        const item = data.data;
-       setApiValue(item);  
+        const item = data;
+       setApiValue(item);
+       console.log(item);
+
     }
 
     loadData();
 
     async function loadData2(){
-        const response = await fetch("https://api.pokemontcg.io/v2/cards?q=name:pikachu");
+        const response = await fetch("https://pokeapi.co/api/v2/pokemon/"+props.search2);
         const data = await response.json();
-        const item = data.data;
-       setApiValue2(item);  
+        const item2 = data;
+       setApiValue2(item2); 
+
     }
 
     loadData2();
-    }, []);
+    }, [props]);
 
-    console.log(apiValue);
-    console.log(apiValue2);
-        var HPpoke1 = [];
-        var HPpoke2 = [];
+    var heightpoke1 = [];
+    var heightpoke2 = [];
+    heightpoke1.push(apiValue.height);
+    heightpoke2.push(apiValue2.height);
+    console.log(heightpoke1);
+    console.log(heightpoke2);
 
-    for(var i = 0; i < apiValue.length; i++){
-        HPpoke1.push(apiValue[i].hp);
-
-    };
-
-    for(var i = 0; i < apiValue2.length; i++){
-        HPpoke2.push(apiValue2[i].hp);
-    
-    };
-    console.log(HPpoke1);
-    console.log(HPpoke2);
 
     const chartData = {
-        labels: ["HP Pokemon 1","HP Pokemon 2"],
+        labels: [""+props.search1 +"",""+props.search2 +""],
         datasets: [{
             label: "Health of Pokemon", 
-            data: [HPpoke1[0],HPpoke2[0]],
+            data: [heightpoke1,heightpoke2],
             backgroundColor: ['rgba(75,192,192,0.6)','rgba(255,192,192,0.6)'],
             borderWidth: 4,
         }]
     };
 
     return(
-        <div style={{marginLeft:'60px'}} className='containerChart'><h1 style={{textAlign:'center', marginTop:'-15px'}}>HP</h1><br></br>
-        <h1 style={{textAlign:'center', marginTop:'-35px',fontSize:'16px', fontWeight:'200'}}>-Compare Pokemon HP-</h1>
+        <div style={{marginLeft:'60px'}} className='containerChart'><h1 style={{textAlign:'center', marginTop:'-15px'}}>Height</h1><br></br>
+        <h1 style={{textAlign:'center', marginTop:'-35px',fontSize:'16px', fontWeight:'200'}}>-Compare Pokemon Height-</h1>
     <div style={{height:'250px', width:'250px', float:'left', marginLeft:'125px'}}  className='Prices'>
        <Pie data={chartData}  options={{
            responsive:true,
